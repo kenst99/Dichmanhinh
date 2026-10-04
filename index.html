@@ -1,0 +1,1119 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dịch màn hình</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1F3F8; --surface:#FFFFFF; --ink:#171E46; --muted:#59618A; --line:#D8DDEA;
+  --stage:#E2E6F0; --marker:#FFD93B; --marker-ink:#171E46; --seal:#C4263A;
+  --lift:0 14px 30px -18px rgba(23,30,70,.55);
+  --font:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1330; --surface:#191F45; --ink:#ECEFFB; --muted:#A3ABCF; --line:#2D3568;
+    --stage:#090C22; --seal:#E5485C; --lift:0 14px 30px -18px rgba(0,0,0,.9);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1330; --surface:#191F45; --ink:#ECEFFB; --muted:#A3ABCF; --line:#2D3568;
+  --stage:#090C22; --seal:#E5485C; --lift:0 14px 30px -18px rgba(0,0,0,.9);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--marker);outline-offset:2px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- top bar ---------- */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);
+  padding:12px 16px 10px;border-bottom:1px solid var(--line)}
+.bar-in{max-width:560px;margin:0 auto;display:grid;gap:10px}
+.brand{display:flex;align-items:center;gap:10px}
+.seal{width:30px;height:30px;border-radius:7px;background:var(--seal);color:#fff;display:grid;place-items:center;
+  font:700 18px/1 "Songti SC","Noto Serif CJK SC","Source Han Serif SC",serif;transform:rotate(-4deg)}
+.brand h1{margin:0;font-size:19px;font-weight:800;letter-spacing:-.01em}
+.has-result .brand{display:none}
+.has-result .bar{padding-top:10px}
+.has-result main{padding-top:14px}
+.langs{border:0;margin:0;padding:3px;display:grid;grid-template-columns:repeat(4,1fr);gap:2px;
+  background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.langs label{position:relative;display:block;text-align:center}
+.langs input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.langs span{display:block;padding:8px 2px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap}
+.langs input:checked + span{background:var(--ink);color:var(--paper)}
+.langs input:focus-visible + span{outline:3px solid var(--marker);outline-offset:1px}
+
+main{max-width:560px;margin:0 auto;padding:22px 16px 40px}
+
+/* ---------- home ---------- */
+.lede h2{margin:0 0 8px;font-size:clamp(27px,8vw,36px);line-height:1.12;font-weight:800;letter-spacing:-.025em;text-wrap:balance}
+.lede p{margin:0;color:var(--muted);max-width:34em}
+.demo{margin:22px 0;background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  padding:18px 18px 16px;display:grid;gap:9px;justify-items:start;font-size:17px;box-shadow:var(--lift)}
+.pair{display:inline-grid;line-height:1.55}
+.pair > *{grid-area:1/1;white-space:nowrap}
+.pair .zh{color:var(--muted)}
+.pair .vi{justify-self:start;margin:0 -6px;padding:0 6px;border-radius:5px;background:var(--marker);color:var(--marker-ink);
+  font-weight:600;animation:paste .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0s)}
+.demo-buy{display:flex;align-items:center;gap:14px;margin-top:4px;width:100%}
+.demo-buy b{font-size:24px;font-weight:800;letter-spacing:-.01em}
+.demo-buy .pair{margin-left:auto;font-size:15px}
+.demo-buy .zh,.demo-buy .vi{padding:5px 14px;border-radius:999px;margin:0}
+.demo-buy .zh{border:1px solid var(--line)}
+@keyframes paste{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -2px 0 -2px)}}
+
+.actions{display:grid;gap:10px}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:14px;
+  padding:15px 18px;font-weight:600;font-size:16px;min-height:54px;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--marker);border-color:var(--marker);color:var(--marker-ink);font-weight:800}
+.btn svg,.dock svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.note{margin:12px 0 0;font-size:14px;color:var(--muted)}
+
+.fold{margin-top:26px;border-top:1px solid var(--line)}
+.fold details{border-bottom:1px solid var(--line)}
+.fold summary{list-style:none;padding:15px 0;font-weight:600;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.fold summary::-webkit-details-marker{display:none}
+.fold summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  transform:rotate(45deg);margin-right:4px;transition:transform .2s}
+.fold details[open] summary::after{transform:rotate(-135deg)}
+.fold .body{padding:0 0 18px;color:var(--muted);font-size:15px}
+.fold ol{margin:0;padding-left:1.3em;display:grid;gap:7px}
+.fold ol b{color:var(--ink);font-weight:600}
+.fold p{margin:10px 0 0}
+.choice{display:grid;gap:8px}
+.choice label{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);cursor:pointer}
+.choice input{margin:3px 0 0;width:18px;height:18px;accent-color:var(--ink);flex:none}
+.choice b{display:block;color:var(--ink);font-weight:600}
+
+/* ---------- result ---------- */
+#result{padding-bottom:84px}
+.status{display:flex;align-items:center;gap:10px;min-height:44px;margin:-6px 0 12px;font-size:14px;color:var(--muted)}
+.status p{margin:0;flex:1}
+.status[data-kind="error"] p{color:var(--seal);font-weight:600}
+.status .mini{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;white-space:nowrap}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--marker);box-shadow:0 0 0 0 var(--marker);animation:pulse 1.2s ease-out infinite;flex:none}
+@keyframes pulse{to{box-shadow:0 0 0 9px transparent}}
+.stage{background:var(--stage);border-radius:16px;overflow:hidden;box-shadow:var(--lift);line-height:0}
+.stage canvas{display:block;width:100%;height:auto;touch-action:manipulation}
+
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);
+  padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px))}
+.dock-in{max-width:560px;margin:0 auto;display:flex;align-items:stretch;gap:4px}
+.dock button{appearance:none;border:0;background:none;flex:1;min-height:52px;border-radius:12px;padding:6px 2px;
+  display:grid;justify-items:center;align-content:center;gap:3px;font-size:11.5px;font-weight:600;color:var(--muted);white-space:nowrap}
+.dock button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.dock button.go{flex:1.25;background:var(--marker);color:var(--marker-ink);font-weight:800}
+.dock button:active{transform:translateY(1px)}
+
+/* ---------- sheet + toast ---------- */
+.veil{position:fixed;inset:0;z-index:40;background:rgba(9,12,34,.45);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:560px;max-height:78%;overflow:auto;background:var(--surface);border-radius:20px 20px 0 0;
+  padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));animation:rise .22s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{transform:translateY(24px);opacity:0}}
+.sheet h3{margin:0 0 4px;font-size:13px;font-weight:600;color:var(--muted)}
+.sheet .orig{margin:0 0 14px;font-size:18px;line-height:1.5;user-select:text;-webkit-user-select:text;word-break:break-word}
+.sheet .tran{margin:0 0 16px;font-size:20px;line-height:1.4;font-weight:600;user-select:text;-webkit-user-select:text;word-break:break-word}
+.sheet .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sheet .btn{min-height:48px;padding:10px 12px;font-size:15px}
+.sheet .close{margin-top:8px;width:100%;border-color:transparent;background:none;color:var(--muted)}
+.pastezone{margin:12px 0 4px;min-height:120px;border:2px dashed var(--line);border-radius:14px;display:grid;place-items:center;
+  padding:16px;text-align:center;color:var(--muted);font-size:15px;caret-color:transparent;outline-offset:3px;-webkit-user-select:text;user-select:text}
+.sheet .lead{margin:0;font-size:16px;font-weight:600}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:50;
+  background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;
+  max-width:calc(100% - 32px);text-align:center;pointer-events:none}
+
+@media (prefers-reduced-motion:reduce){
+  .pair .vi,.sheet,.dot{animation:none}
+  .fold summary::after{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="bar-in">
+    <div class="brand">
+      <span class="seal" aria-hidden="true">译</span>
+      <h1>Dịch màn hình</h1>
+    </div>
+    <fieldset class="langs">
+      <legend class="vh">Ngôn ngữ cần dịch sang tiếng Việt</legend>
+      <label><input type="radio" name="lang" value="auto"><span>Tự động</span></label>
+      <label><input type="radio" name="lang" value="zh"><span>Trung–Việt</span></label>
+      <label><input type="radio" name="lang" value="en"><span>Anh–Việt</span></label>
+      <label><input type="radio" name="lang" value="ja"><span>Nhật–Việt</span></label>
+    </fieldset>
+  </div>
+</header>
+
+<main>
+  <section id="home">
+    <div class="lede">
+      <h2>Chụp màn hình, nhận lại bản tiếng Việt dán đè đúng chỗ.</h2>
+      <p>Chữ Trung, Anh, Nhật trong ảnh được đọc, dịch rồi thay ngay tại vị trí cũ, giữ nguyên màu nền và bố cục.</p>
+    </div>
+
+    <div class="demo" aria-hidden="true">
+      <span class="pair"><span class="zh">全新未拆封</span><span class="vi" style="--d:.7s">Mới, chưa bóc hộp</span></span>
+      <span class="pair"><span class="zh">包邮，可小刀</span><span class="vi" style="--d:1.05s">Miễn phí ship, bớt chút được</span></span>
+      <div class="demo-buy">
+        <b>¥10000</b>
+        <span class="pair"><span class="zh">立即购买</span><span class="vi" style="--d:1.4s">Mua ngay</span></span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="btnPick" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M4 17l5-4.5 3.5 3 3-2.5L20 17"/></svg>
+        Chọn ảnh chụp màn hình
+      </button>
+      <button class="btn" id="btnPaste" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="16" rx="2.5"/><path d="M9 5V4.2A1.2 1.2 0 0 1 10.2 3h3.6A1.2 1.2 0 0 1 15 4.2V5M9 11h6M9 15h4"/></svg>
+        Dán ảnh vừa sao chép
+      </button>
+    </div>
+    <p class="note" id="homeNote" hidden></p>
+
+    <div class="fold">
+      <details>
+        <summary>Mở nhanh bằng Phím tắt iPhone</summary>
+        <div class="body">
+          <ol>
+            <li>Mở ứng dụng <b>Phím tắt</b>, tạo phím tắt mới, đặt tên “Dịch màn hình”.</li>
+            <li>Thêm thao tác <b>Chụp ảnh màn hình</b>.</li>
+            <li>Thêm thao tác <b>Sao chép vào bảng nhớ tạm</b>.</li>
+            <li>Thêm thao tác <b>Mở URL</b> rồi dán đường link của trang này.</li>
+            <li>Vào Cài đặt, Trợ năng, Cảm ứng, gán phím tắt cho <b>Chạm vào mặt sau</b> hoặc cho menu <b>AssistiveTouch</b>.</li>
+          </ol>
+          <p>Lúc cần dịch: gõ hai lần vào lưng máy, trang này mở ra, bấm “Dán ảnh”.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Tùy chọn dịch</summary>
+        <div class="body">
+          <div class="choice" role="radiogroup" aria-label="Cách dịch">
+            <label><input type="radio" name="tier" value="quick"><span><b>Dịch nhanh</b>Chữ hiện ra gần như ngay. Hợp để lướt xem hàng.</span></label>
+            <label><input type="radio" name="tier" value="default"><span><b>Dịch kỹ</b>Chờ lâu hơn, câu dịch và vị trí chữ chuẩn hơn.</span></label>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section id="result" hidden>
+    <div class="status" id="status" role="status" aria-live="polite">
+      <span class="dot" id="statusDot"></span>
+      <p id="statusText"></p>
+      <button class="mini" id="statusBtn" type="button" hidden></button>
+    </div>
+    <div class="stage"><canvas id="view" aria-label="Ảnh chụp màn hình đã dịch. Chạm vào chữ để xem bản gốc."></canvas></div>
+  </section>
+</main>
+
+<nav class="dock" id="dock" hidden aria-label="Thao tác với ảnh">
+  <div class="dock-in">
+    <button type="button" id="btnOrig" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>Xem gốc
+    </button>
+    <button type="button" id="btnCopy">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-7A2.5 2.5 0 0 0 4 5.5v8A2.5 2.5 0 0 0 6.5 16H8"/></svg>Chép chữ
+    </button>
+    <button type="button" id="btnSave" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v11M7.5 10.5L12 15l4.5-4.5M4.5 19.5h15"/></svg>Lưu ảnh
+    </button>
+    <button type="button" id="btnPaste2">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="16" rx="2.5"/><path d="M9 5V4.2A1.2 1.2 0 0 1 10.2 3h3.6A1.2 1.2 0 0 1 15 4.2V5M9 11h6M9 15h4"/></svg>Dán ảnh
+    </button>
+    <button type="button" id="btnPick2" class="go">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M4 17l5-4.5 3.5 3 3-2.5L20 17"/></svg>Ảnh khác
+    </button>
+  </div>
+</nav>
+
+<div class="veil" id="veil" hidden>
+  <div class="sheet" id="sheetBox" role="dialog" aria-modal="true" aria-label="Chữ gốc và bản dịch" hidden>
+    <h3>Chữ gốc</h3>
+    <p class="orig" id="sheetOrig"></p>
+    <h3>Tiếng Việt</h3>
+    <p class="tran" id="sheetTran"></p>
+    <div class="row">
+      <button class="btn primary" type="button" id="copyTran">Chép bản dịch</button>
+      <button class="btn" type="button" id="copyOrig">Chép chữ gốc</button>
+    </div>
+    <button class="btn close" type="button" data-close>Đóng</button>
+  </div>
+  <div class="sheet" id="sheetPaste" role="dialog" aria-modal="true" aria-label="Dán ảnh" hidden>
+    <p class="lead">Nhấn giữ vào ô dưới rồi chọn Dán</p>
+    <div class="pastezone" id="pasteZone" contenteditable="true" role="textbox" aria-label="Ô dán ảnh">Ảnh vừa sao chép sẽ được dịch ngay khi dán vào đây.</div>
+    <button class="btn close" type="button" data-close>Đóng</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<input type="file" id="file" accept="image/*" class="vh" tabindex="-1" aria-hidden="true">
+
+<script>
+(() => {
+'use strict';
+
+/* ================= basics ================= */
+const $ = id => document.getElementById(id);
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const FONT = '"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif';
+const TILE = 1000, NOMINAL = 940, SEAM = 30, MAX_TILES = 8, INK = 70;
+
+const LANGS = {
+  auto: { name: 'nước ngoài', src: 'any language other than Vietnamese (mostly Chinese, English or Japanese)', only: false },
+  zh:   { name: 'Trung', src: 'Chinese (Simplified or Traditional)', only: true },
+  en:   { name: 'Anh',   src: 'English', only: true },
+  ja:   { name: 'Nhật',  src: 'Japanese', only: true }
+};
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* storage can be unavailable */ } }
+};
+
+const S = {
+  src: null, sctx: null, W: 0, H: 0,
+  boxes: [], sel: null, showOrig: false,
+  run: 0, busy: false, truncated: false, ctls: new Set(),
+  lang: store.get('dmh.lang', 'auto'),
+  tier: store.get('dmh.tier', 'quick')
+};
+if (!LANGS[S.lang]) S.lang = 'auto';
+if (S.tier !== 'default') S.tier = 'quick';
+
+const view = $('view');
+const vctx = view.getContext('2d');
+
+/* ================= Claude runtime ================= */
+const cap = name => (window.claude && typeof window.claude.use === 'function')
+  ? Promise.resolve(window.claude.use(name)).catch(() => null)
+  : Promise.resolve(null);
+const samplePromise = cap('sample');
+const downloadsPromise = cap('downloads');
+downloadsPromise.then(d => { $('btnSave').hidden = !d; });
+samplePromise.then(s => {
+  if (!s) {
+    const n = $('homeNote');
+    n.textContent = 'Trang này cần mở trong Claude (claude.ai hoặc ứng dụng Claude) thì mới dịch được.';
+    n.hidden = false;
+  }
+});
+
+const fontReady = (document.fonts && document.fonts.load)
+  ? Promise.race([
+      document.fonts.load('600 20px "Be Vietnam Pro"', 'Tiếng Việt ạảấầẩẫậắằẳẵặđơư'),
+      new Promise(r => setTimeout(r, 2500))
+    ]).catch(() => {})
+  : Promise.resolve();
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => { if (S.boxes.length) { S.boxes.forEach(layoutBox); render(); } });
+}
+
+/* ================= UI helpers ================= */
+let toastTimer = 0;
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, 2600);
+}
+
+let statusAction = null;
+function setStatus(kind, text, btnLabel, action) {
+  const el = $('status');
+  el.dataset.kind = kind;
+  $('statusDot').hidden = kind !== 'busy';
+  $('statusText').textContent = text;
+  const b = $('statusBtn');
+  b.hidden = !btnLabel;
+  b.textContent = btnLabel || '';
+  statusAction = action || null;
+}
+$('statusBtn').addEventListener('click', () => { if (statusAction) statusAction(); });
+
+function showResult() {
+  $('home').hidden = true;
+  document.body.classList.add('has-result');
+  $('result').hidden = false;
+  $('dock').hidden = false;
+  window.scrollTo(0, 0);
+}
+
+async function copyText(text, okMsg) {
+  if (!text) { toast('Chưa có chữ để chép.'); return; }
+  let ok = false;
+  try { await navigator.clipboard.writeText(text); ok = true; } catch (e) { /* fall through */ }
+  if (!ok) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;left:0;top:0;opacity:0';
+    document.body.appendChild(ta); ta.select();
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    ta.remove();
+  }
+  toast(ok ? okMsg : 'Trình duyệt chặn sao chép. Nhấn giữ vào chữ để chép.');
+}
+
+/* ================= image input ================= */
+async function decode(blob) {
+  if (window.createImageBitmap) {
+    try { return await createImageBitmap(blob, { imageOrientation: 'from-image' }); } catch (e) { /* next */ }
+    try { return await createImageBitmap(blob); } catch (e) { /* next */ }
+  }
+  const url = await new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result); r.onerror = () => rej(r.error);
+    r.readAsDataURL(blob);
+  });
+  return await new Promise((res, rej) => {
+    const im = new Image();
+    im.onload = () => res(im); im.onerror = () => rej(new Error('decode'));
+    im.src = url;
+  });
+}
+
+async function loadImage(blob) {
+  stopCalls(); S.run++;
+  let bmp;
+  try { bmp = await decode(blob); }
+  catch (e) { toast('Không mở được ảnh này. Thử ảnh PNG hoặc JPG.'); return; }
+  const w0 = bmp.width || bmp.naturalWidth, h0 = bmp.height || bmp.naturalHeight;
+  if (!w0 || !h0) { toast('Không mở được ảnh này. Thử ảnh PNG hoặc JPG.'); return; }
+  const k = Math.min(1, 1320 / w0, Math.sqrt(12e6 / (w0 * h0)));
+  const W = Math.max(1, Math.round(w0 * k)), H = Math.max(1, Math.round(h0 * k));
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const cx = c.getContext('2d', { willReadFrequently: true });
+  cx.imageSmoothingQuality = 'high';
+  cx.drawImage(bmp, 0, 0, W, H);
+  if (bmp.close) bmp.close();
+  S.src = c; S.sctx = cx; S.W = W; S.H = H;
+  S.boxes = []; S.sel = null; S.showOrig = false;
+  $('btnOrig').setAttribute('aria-pressed', 'false');
+  view.width = W; view.height = H;
+  closeSheet();
+  showResult();
+  render();
+  translate();
+}
+
+const fileInput = $('file');
+fileInput.addEventListener('change', () => {
+  const f = fileInput.files && fileInput.files[0];
+  fileInput.value = '';
+  if (f) loadImage(f);
+});
+const pick = () => fileInput.click();
+
+async function pasteImage() {
+  if (navigator.clipboard && navigator.clipboard.read) {
+    try {
+      const items = await navigator.clipboard.read();
+      for (const it of items) {
+        const tp = it.types.find(t => t.startsWith('image/'));
+        if (tp) { loadImage(await it.getType(tp)); return; }
+      }
+      toast('Bảng nhớ tạm chưa có ảnh. Chụp màn hình rồi chọn Sao chép.');
+      return;
+    } catch (e) { /* blocked or dismissed: fall back to a paste target */ }
+  }
+  openSheet('sheetPaste');
+  const z = $('pasteZone');
+  try { z.focus(); } catch (e) { /* ignore */ }
+}
+
+document.addEventListener('paste', e => {
+  const cd = e.clipboardData;
+  if (!cd) return;
+  let f = Array.from(cd.files || []).find(x => x.type.startsWith('image/'));
+  if (!f && cd.items) {
+    for (const it of cd.items) {
+      if (it.kind === 'file' && it.type.startsWith('image/')) { f = it.getAsFile(); break; }
+    }
+  }
+  if (f) { e.preventDefault(); loadImage(f); }
+  else if (e.target === $('pasteZone') || $('pasteZone').contains(e.target)) {
+    e.preventDefault();
+    toast('Bảng nhớ tạm chưa có ảnh.');
+  }
+});
+$('pasteZone').addEventListener('beforeinput', e => {
+  if (e.inputType && !e.inputType.startsWith('insertFromPaste')) e.preventDefault();
+});
+document.addEventListener('dragover', e => { e.preventDefault(); });
+document.addEventListener('drop', e => {
+  e.preventDefault();
+  const f = Array.from((e.dataTransfer && e.dataTransfer.files) || []).find(x => x.type.startsWith('image/'));
+  if (f) loadImage(f);
+});
+
+/* ================= tiling ================= */
+function quietRow(cx, w, h, ideal, range) {
+  const y0 = Math.max(1, ideal - range), y1 = Math.min(h - 1, ideal + range);
+  if (y1 <= y0) return clamp(ideal, 1, Math.max(1, h - 1));
+  const d = cx.getImageData(0, y0, w, y1 - y0 + 1).data;
+  let best = ideal, bestE = Infinity;
+  for (let y = y0; y <= y1; y++) {
+    let e = 0;
+    const o = (y - y0) * w * 4;
+    for (let x = 1; x < w; x++) {
+      const p = o + x * 4;
+      e += Math.abs(d[p] - d[p - 4]) + Math.abs(d[p + 1] - d[p - 3]) + Math.abs(d[p + 2] - d[p - 2]);
+    }
+    e += Math.abs(y - ideal) * 0.5;
+    if (e < bestE) { bestE = e; best = y; }
+  }
+  return best;
+}
+
+async function planTiles() {
+  const W = S.W, H = S.H;
+  const top = Math.min(1, TILE / W);
+  let n = 1, s = top;
+  for (; n <= MAX_TILES; n++) {
+    s = Math.min(top, n * NOMINAL / H);
+    if (s >= top - 1e-9 || s * W >= 850) break;
+  }
+  if (n > MAX_TILES) { n = MAX_TILES; s = Math.min(top, n * NOMINAL / H); }
+  const sw = Math.max(1, Math.round(W * s)), sh = Math.max(1, Math.round(H * s));
+  const sc = document.createElement('canvas');
+  sc.width = sw; sc.height = sh;
+  const sx = sc.getContext('2d', { willReadFrequently: true });
+  sx.imageSmoothingQuality = 'high';
+  sx.drawImage(S.src, 0, 0, sw, sh);
+  const cuts = [0];
+  for (let i = 1; i < n; i++) cuts.push(quietRow(sx, sw, sh, Math.round(i * sh / n), SEAM));
+  cuts.push(sh);
+  const tiles = [];
+  for (let i = 0; i < n; i++) {
+    const y0 = cuts[i], th = Math.min(TILE, cuts[i + 1] - y0);
+    if (th < 2) continue;
+    const tc = document.createElement('canvas');
+    tc.width = TILE; tc.height = TILE;
+    const tx = tc.getContext('2d');
+    tx.fillStyle = '#808080';
+    tx.fillRect(0, 0, TILE, TILE);
+    tx.drawImage(sc, 0, y0, sw, th, 0, 0, sw, th);
+    const blob = await new Promise(r => tc.toBlob(r, 'image/jpeg', 0.92));
+    if (blob) tiles.push({ i, y0, th, sw, sx: sw / W, sy: sh / H, blob });
+  }
+  return tiles;
+}
+
+/* ================= prompt ================= */
+function buildPrompt(t) {
+  const L = LANGS[S.lang] || LANGS.auto;
+  return [
+    'You are the OCR and translation engine of a phone screen translator.',
+    'The attached image is 1000×1000 px. A crop of a phone screenshot occupies its top-left ' + t.sw + '×' + t.th +
+      ' px; any flat gray area beyond that is padding and must be ignored.',
+    '',
+    'Task: find every piece of visible text written in ' + L.src + ' and translate it into natural Vietnamese.' +
+      (L.only ? ' Ignore text in other languages.' : ''),
+    '',
+    'Output: one JSON object per line and nothing else (no markdown, no commentary):',
+    '{"b":[x1,y1,x2,y2],"n":1,"o":"original text","t":"bản dịch tiếng Việt"}',
+    '',
+    'Rules:',
+    '- b is the tight bounding box of the text in image pixels: x1,y1 is the top-left corner and x2,y2 the bottom-right corner, integers from 0 to 1000 measured from the top-left corner of the image. Cover the whole text and nothing else.',
+    '- n is the number of text lines inside the box.',
+    '- One object per visual text block: a single line, or a paragraph whose lines wrap together. Buttons, tabs, labels, prices and captions are separate blocks; never merge text from different interface elements or different columns.',
+    '- List the blocks from top to bottom.',
+    '- Translate the way a Vietnamese app would word it: short and natural, about as long as the original so it fits the same space. Use everyday shopping terms where they apply (包邮 → "Miễn phí vận chuyển", 全新 → "Mới 100%", 立即购买 → "Mua ngay", 送料無料 → "Miễn phí vận chuyển").',
+    '- Keep numbers, prices, currency symbols, sizes, model codes, usernames and brand names exactly as written.',
+    '- Skip text that is already Vietnamese, text made only of numbers, prices or times, and the phone status bar (clock, signal, battery).',
+    '- If text is cut off by the edge of the crop, translate the visible part.',
+    '- If there is nothing to translate, output exactly {"none":true}'
+  ].join('\n');
+}
+
+function parseObjs(line) {
+  let s = line.trim();
+  if (!s || s.startsWith('```')) return [];
+  s = s.replace(/^[\[,]\s*/, '').replace(/[,\]]\s*$/, '');
+  if (!s) return [];
+  try { const v = JSON.parse(s); return Array.isArray(v) ? v : [v]; } catch (e) { /* next */ }
+  try { const v = JSON.parse('[' + s + ']'); return Array.isArray(v) ? v : []; } catch (e) { /* next */ }
+  const a = s.indexOf('{'), b = s.lastIndexOf('}');
+  if (a >= 0 && b > a) { try { return [JSON.parse(s.slice(a, b + 1))]; } catch (e) { /* give up */ } }
+  return [];
+}
+
+/* ================= translate ================= */
+const ERR = {
+  none: 'Trang này cần mở trong Claude (claude.ai hoặc ứng dụng Claude) thì mới dịch được.',
+  images_unavailable: 'Bản xem này không gửi được ảnh cho Claude. Mở trang trong ứng dụng Claude hoặc claude.ai.',
+  not_granted: 'Bạn chưa cho phép trang dùng Claude. Tải lại trang rồi chọn Cho phép.',
+  rate_limited: 'Đang gửi quá nhiều hoặc đã hết lượt dùng Claude. Chờ một lúc rồi dịch lại.',
+  session_expired: 'Phiên đăng nhập đã hết. Đăng nhập lại Claude rồi mở lại trang.',
+  image_rejected: 'Claude không đọc được ảnh này. Thử ảnh PNG hoặc JPG khác.',
+  refused: 'Claude từ chối dịch ảnh này.',
+  sampling_disabled: 'Tài khoản này chưa dùng được Claude trong trang.',
+  upstream_error: 'Mất kết nối giữa chừng.'
+};
+const FATAL = new Set(['none', 'not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed',
+  'images_unavailable', 'session_expired', 'rate_limited']);
+const errText = code => ERR[code] || (FATAL.has(code) ? ERR.sampling_disabled : ERR.upstream_error);
+
+function stopCalls() {
+  S.ctls.forEach(c => { try { c.abort(); } catch (e) { /* ignore */ } });
+  S.ctls.clear();
+}
+
+function countText() {
+  const n = S.boxes.length;
+  return n ? 'Đã dịch ' + n + ' chỗ. Chạm vào chữ để xem bản gốc.' : '';
+}
+
+async function translate() {
+  if (!S.src) return;
+  stopCalls();
+  const run = ++S.run;
+  S.boxes = []; S.sel = null; S.truncated = false; S.busy = true;
+  render();
+  const retry = () => translate();
+  const fail = code => {
+    if (run !== S.run) return;
+    S.busy = false;
+    setStatus('error', errText(code), FATAL.has(code) && code !== 'rate_limited' ? '' : 'Dịch lại', retry);
+  };
+
+  setStatus('busy', 'Đang kết nối Claude…');
+  const sample = await samplePromise;
+  if (run !== S.run) return;
+  if (!sample) return fail('none');
+  let caps = null;
+  try { caps = await sample.limits(); } catch (e) { caps = null; }
+  if (run !== S.run) return;
+  if (!caps || !caps.images) return fail('images_unavailable');
+  await fontReady;
+  if (run !== S.run) return;
+
+  setStatus('busy', 'Đang đọc chữ trong ảnh…', 'Dừng', () => {
+    if (run !== S.run) return;
+    stopCalls(); S.run++; S.busy = false;
+    setStatus('done', countText() || 'Đã dừng.', 'Dịch lại', retry);
+  });
+
+  let tiles;
+  try { tiles = await planTiles(); } catch (e) { return fail('image_rejected'); }
+  if (run !== S.run) return;
+  if (!tiles.length) return fail('image_rejected');
+
+  const queue = tiles.slice();
+  let firstErr = null;
+  const worker = async () => {
+    while (queue.length && run === S.run) {
+      const t = queue.shift();
+      try { await runTile(sample, t, run); }
+      catch (e) {
+        const code = (e && e.code) || 'upstream_error';
+        if (code === 'cancelled') return;
+        if (!firstErr) firstErr = code;
+        if (FATAL.has(code)) queue.length = 0;
+      }
+    }
+  };
+  await Promise.all([worker(), worker()]);
+  if (run !== S.run) return;
+  S.busy = false;
+  render();
+
+  if (firstErr && (FATAL.has(firstErr) || !S.boxes.length)) return fail(firstErr);
+  if (firstErr) {
+    setStatus('error', 'Mới dịch được một phần ảnh (' + S.boxes.length + ' chỗ). ' + errText(firstErr), 'Dịch lại', retry);
+  } else if (!S.boxes.length) {
+    setStatus('done', 'Không thấy chữ ' + LANGS[S.lang].name + ' nào cần dịch trong ảnh này.', 'Dịch lại', retry);
+  } else {
+    setStatus('done', countText() + (S.truncated ? ' Ảnh nhiều chữ nên có chỗ chưa dịch hết.' : ''));
+  }
+}
+
+async function runTile(sample, t, run) {
+  const ctl = new AbortController();
+  S.ctls.add(ctl);
+  let pending = '';
+  const eat = line => {
+    if (run !== S.run) return;
+    for (const o of parseObjs(line)) addBox(t, o);
+  };
+  try {
+    const res = await sample(buildPrompt(t), {
+      images: t.blob,
+      modelTier: S.tier,
+      signal: ctl.signal,
+      onText: u => {
+        const parts = (pending + u.delta).split('\n');
+        pending = parts.pop();
+        for (const l of parts) eat(l);
+      }
+    });
+    if (pending.trim()) eat(pending);
+    if (res && res.truncated) S.truncated = true;
+  } finally {
+    S.ctls.delete(ctl);
+  }
+}
+
+/* ================= boxes ================= */
+function iou(a, b) {
+  const x1 = Math.max(a.x, b.x), y1 = Math.max(a.y, b.y);
+  const x2 = Math.min(a.x + a.w, b.x + b.w), y2 = Math.min(a.y + a.h, b.y + b.h);
+  const inter = Math.max(0, x2 - x1) * Math.max(0, y2 - y1);
+  return inter / (a.w * a.h + b.w * b.h - inter || 1);
+}
+
+function addBox(t, o) {
+  if (!o || !Array.isArray(o.b) || o.b.length < 4) return;
+  const tr = typeof o.t === 'string' ? o.t.replace(/\s+/g, ' ').trim() : '';
+  if (!tr) return;
+  let x1 = Number(o.b[0]), y1 = Number(o.b[1]), x2 = Number(o.b[2]), y2 = Number(o.b[3]);
+  if (![x1, y1, x2, y2].every(Number.isFinite)) return;
+  if (x2 < x1) { const k = x1; x1 = x2; x2 = k; }
+  if (y2 < y1) { const k = y1; y1 = y2; y2 = k; }
+  x1 = clamp(x1, 0, t.sw); x2 = clamp(x2, 0, t.sw);
+  y1 = clamp(y1, 0, t.th); y2 = clamp(y2, 0, t.th);
+  const m = { x: x1 / t.sx, y: (t.y0 + y1) / t.sy, w: (x2 - x1) / t.sx, h: (y2 - y1) / t.sy };
+  if (m.w < 6 || m.h < 6) return;
+  if (S.boxes.some(b => iou(b.m, m) > 0.6)) return;
+  const box = { m, n: clamp(Math.round(Number(o.n)) || 1, 1, 40), o: typeof o.o === 'string' ? o.o.trim() : '', t: tr };
+  try { analyze(box); }
+  catch (e) { box.r = { x: m.x, y: m.y, w: m.w, h: m.h }; box.bg = [255, 255, 255]; box.fg = [20, 22, 30]; box.clean = false; box.free = { l: 0, r: 0 }; }
+  layoutBox(box);
+  S.boxes.push(box);
+  if (S.busy) $('statusText').textContent = 'Đang dịch… ' + S.boxes.length + ' chỗ';
+  render();
+}
+
+function snapLow(p, a, b, gap) {
+  const last = p.length - 1;
+  a = clamp(a, 0, last); b = clamp(b, 0, last);
+  const mid = (a + b) >> 1;
+  let first = -1;
+  for (let k = a; k <= mid; k++) if (p[k]) { first = k; break; }
+  if (first < 0) return a;
+  let edge = first, blank = 0;
+  for (let k = first - 1; k >= 0; k--) {
+    if (p[k]) { edge = k; blank = 0; }
+    else if (++blank > gap) break;
+  }
+  if (edge === 0 && a > 0) return a;
+  return edge;
+}
+function snapHigh(p, a, b, gap) {
+  const last = p.length - 1;
+  a = clamp(a, 0, last); b = clamp(b, 0, last);
+  const mid = (a + b + 1) >> 1;
+  let first = -1;
+  for (let k = b; k >= mid; k--) if (p[k]) { first = k; break; }
+  if (first < 0) return b;
+  let edge = first, blank = 0;
+  for (let k = first + 1; k <= last; k++) {
+    if (p[k]) { edge = k; blank = 0; }
+    else if (++blank > gap) break;
+  }
+  if (edge === last && b < last) return b;
+  return edge;
+}
+
+const lum = c => {
+  const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]);
+};
+const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+
+/* Reads the pixels around a box: background colour, text colour, the real edges of the ink,
+   and how much empty space lies to its left and right. */
+function analyze(box) {
+  const W = S.W, H = S.H, m = box.m;
+  const lineH = m.h / box.n;
+  const pad = clamp(Math.round(lineH * 0.5), 6, 28);
+  const ex = Math.max(0, Math.floor(m.x - pad)), ey = Math.max(0, Math.floor(m.y - pad));
+  const ex2 = Math.min(W, Math.ceil(m.x + m.w + pad)), ey2 = Math.min(H, Math.ceil(m.y + m.h + pad));
+  const ew = ex2 - ex, eh = ey2 - ey;
+  const d = S.sctx.getImageData(ex, ey, ew, eh).data;
+  const N = ew * eh;
+
+  const cnt = new Uint32Array(4096), sr = new Float64Array(4096), sg = new Float64Array(4096), sb = new Float64Array(4096);
+  for (let i = 0; i < N; i++) {
+    const p = i * 4, k = ((d[p] >> 4) << 8) | ((d[p + 1] >> 4) << 4) | (d[p + 2] >> 4);
+    cnt[k]++; sr[k] += d[p]; sg[k] += d[p + 1]; sb[k] += d[p + 2];
+  }
+  let bk = 0;
+  for (let k = 1; k < 4096; k++) if (cnt[k] > cnt[bk]) bk = k;
+  const bg = [sr[bk] / cnt[bk], sg[bk] / cnt[bk], sb[bk] / cnt[bk]];
+
+  const ax = clamp(Math.round(m.x) - ex, 0, ew - 1), ay = clamp(Math.round(m.y) - ey, 0, eh - 1);
+  const bx = clamp(Math.round(m.x + m.w) - ex - 1, ax, ew - 1), by = clamp(Math.round(m.y + m.h) - ey - 1, ay, eh - 1);
+
+  const ink = new Uint8Array(N);
+  let inkIn = 0, inkAll = 0, maxD = 0;
+  for (let y = 0; y < eh; y++) {
+    for (let x = 0; x < ew; x++) {
+      const i = y * ew + x, p = i * 4;
+      const dist = Math.abs(d[p] - bg[0]) + Math.abs(d[p + 1] - bg[1]) + Math.abs(d[p + 2] - bg[2]);
+      if (dist > INK) {
+        ink[i] = 1; inkAll++;
+        if (x >= ax && x <= bx && y >= ay && y <= by) { inkIn++; if (dist > maxD) maxD = dist; }
+      }
+    }
+  }
+  const area = (bx - ax + 1) * (by - ay + 1);
+  const clean = inkIn / area > 0.012 && inkAll / N < 0.5;
+
+  let fg = null;
+  if (inkIn) {
+    let r = 0, g = 0, b = 0, c = 0;
+    const cut = maxD * 0.6;
+    for (let y = ay; y <= by; y++) {
+      for (let x = ax; x <= bx; x++) {
+        const i = y * ew + x;
+        if (!ink[i]) continue;
+        const p = i * 4;
+        const dist = Math.abs(d[p] - bg[0]) + Math.abs(d[p + 1] - bg[1]) + Math.abs(d[p + 2] - bg[2]);
+        if (dist >= cut) { r += d[p]; g += d[p + 1]; b += d[p + 2]; c++; }
+      }
+    }
+    if (c) fg = [r / c, g / c, b / c];
+  }
+  if (!fg || contrast(fg, bg) < 3) fg = lum(bg) > 0.4 ? [20, 22, 30] : [255, 255, 255];
+
+  let r = { x: m.x - 2, y: m.y - 2, w: m.w + 4, h: m.h + 4 };
+  let inkY1 = Math.round(m.y), inkY2 = Math.round(m.y + m.h) - 1;
+  if (clean) {
+    const col = new Uint8Array(ew);
+    for (let y = ay; y <= by; y++) { const o = y * ew; for (let x = 0; x < ew; x++) if (ink[o + x]) col[x] = 1; }
+    const gx = Math.max(2, Math.round(lineH * 0.22));
+    const nx1 = snapLow(col, ax, bx, gx), nx2 = snapHigh(col, ax, bx, gx);
+    const row = new Uint8Array(eh);
+    for (let y = 0; y < eh; y++) { const o = y * ew; for (let x = nx1; x <= nx2; x++) if (ink[o + x]) { row[y] = 1; break; } }
+    const gy = Math.max(2, Math.round(lineH * 0.15));
+    const ny1 = snapLow(row, ay, by, gy), ny2 = snapHigh(row, ay, by, gy);
+    if (nx2 - nx1 >= 4 && ny2 - ny1 >= 4) {
+      const p = clamp(lineH * 0.16, 3, 10);
+      r = { x: ex + nx1 - p, y: ey + ny1 - p, w: nx2 - nx1 + 1 + 2 * p, h: ny2 - ny1 + 1 + 2 * p };
+      inkY1 = ey + ny1; inkY2 = ey + ny2;
+    }
+  }
+  r.x = Math.max(0, r.x); r.y = Math.max(0, r.y);
+  r.w = Math.min(W - r.x, r.w); r.h = Math.min(H - r.y, r.h);
+
+  /* empty space beside the text, measured along the band of rows the text sits on */
+  const free = { l: 0, r: 0, edgeL: false, edgeR: false };
+  if (clean) {
+    inkY1 = clamp(inkY1, 0, H - 1); inkY2 = clamp(inkY2, inkY1, H - 1);
+    const bh = inkY2 - inkY1 + 1;
+    const band = S.sctx.getImageData(0, inkY1, W, bh).data;
+    const step = bh > 24 ? 2 : 1;
+    const blocked = x => {
+      for (let y = 0; y < bh; y += step) {
+        const p = (y * W + x) * 4;
+        if (Math.abs(band[p] - bg[0]) + Math.abs(band[p + 1] - bg[1]) + Math.abs(band[p + 2] - bg[2]) > INK) return true;
+      }
+      return false;
+    };
+    let x = Math.floor(r.x) - 1;
+    while (x >= 0 && !blocked(x)) x--;
+    free.l = Math.floor(r.x) - 1 - x; free.edgeL = x < 0;
+    const rx = Math.ceil(r.x + r.w);
+    x = rx;
+    while (x < W && !blocked(x)) x++;
+    free.r = x - rx; free.edgeR = x >= W;
+  }
+  box.r = r; box.bg = bg; box.fg = fg; box.clean = clean; box.free = free;
+}
+
+function wrapText(c, text, maxW) {
+  const words = text.split(' ');
+  const lines = [];
+  let cur = '';
+  for (const w of words) {
+    const tryLine = cur ? cur + ' ' + w : w;
+    if (!cur || c.measureText(tryLine).width <= maxW) cur = tryLine;
+    else { lines.push(cur); cur = w; }
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+function widest(c, lines) {
+  let w = 0;
+  for (const l of lines) w = Math.max(w, c.measureText(l).width);
+  return w;
+}
+
+/* Keeps the type close to the original size. A translation longer than the original spreads into the
+   empty space beside it first, then shrinks, then wraps. */
+function layoutBox(box) {
+  const W = S.W, H = S.H, r = box.r, f = box.free || { l: 0, r: 0 };
+  const LH = 1.24;
+  const minS = Math.max(10, W * 0.0235), maxS = W * 0.075, hardMin = minS * 0.74;
+  const px = clamp((r.h / box.n) * 0.12, 3, 9);
+  const font = s => '600 ' + s + 'px ' + FONT;
+  const s0 = clamp((r.h / box.n) * 0.74, minS, maxS);
+  const d = { x: r.x, y: r.y, w: r.w, h: r.h };
+  let s = s0, lines = [box.t], align = 'left';
+
+  if (box.n === 1) {
+    const extL = f.edgeL ? Math.max(0, f.l - 4) : Math.max(0, f.l * 0.5 - 2);
+    const extR = f.edgeR ? Math.max(0, f.r - 4) : Math.max(0, f.r * 0.5 - 2);
+    const big = Math.max(f.l, f.r);
+    align = (!box.clean || big === 0 || Math.abs(f.l - f.r) <= 0.2 * big + 2) ? 'center' : 'left';
+    const ownW = r.w - 2 * px, maxW = ownW + extL + extR;
+    vctx.font = font(s);
+    let tw = vctx.measureText(box.t).width;
+    /* a little smaller before spreading sideways, so buttons and tabs keep their breathing room */
+    if (tw > ownW) s = Math.max(s0 * 0.82, s0 * ownW / tw, minS);
+    tw = tw * s / s0;
+    if (tw > maxW) s = s * maxW / tw;
+    if (s >= hardMin) {
+      vctx.font = font(s);
+      tw = vctx.measureText(box.t).width;
+    } else {
+      s = minS * 0.86; vctx.font = font(s);
+      lines = wrapText(vctx, box.t, maxW);
+      tw = widest(vctx, lines);
+      if (tw > maxW) {
+        s = Math.max(hardMin * 0.8, s * maxW / tw); vctx.font = font(s);
+        lines = wrapText(vctx, box.t, maxW);
+        tw = widest(vctx, lines);
+      }
+    }
+    const need = tw + 2 * px;
+    if (need > r.w) {
+      const extra = need - r.w;
+      let gl, gr;
+      if (align === 'center') { gl = Math.min(extL, extra / 2); gr = Math.min(extR, extra - gl); gl = Math.min(extL, extra - gr); }
+      else { gr = Math.min(extR, extra); gl = Math.min(extL, extra - gr); }
+      const over = Math.max(0, extra - gl - gr) / 2;
+      d.x = r.x - gl - over; d.w = r.w + extra;
+    }
+    const needH = lines.length * s * LH + 2;
+    if (needH > d.h) { d.y = r.y + r.h / 2 - needH / 2; d.h = needH; }
+  } else {
+    /* paragraph: keep the left edge, borrow empty space on the right, shrink before growing downward */
+    const extR = !box.clean ? 0 : (f.edgeR ? Math.max(0, f.r - 4) : Math.max(0, f.r * 0.5 - 2));
+    s = clamp((r.h / box.n) * 0.7, hardMin, maxS);
+    let availW = r.w - 2 * px;
+    for (let pass = 0; ; pass++) {
+      for (;;) {
+        vctx.font = font(s);
+        lines = wrapText(vctx, box.t, availW);
+        if (widest(vctx, lines) <= availW + 0.5 && lines.length * s * LH <= d.h + 0.5) break;
+        if (s <= hardMin + 0.01) break;
+        s = Math.max(hardMin, s * 0.95);
+      }
+      const fits = widest(vctx, lines) <= availW + 0.5 && lines.length * s * LH <= d.h + 0.5;
+      if (fits || pass === 1 || extR < 8) break;
+      availW += extR; d.w = r.w + extR;
+      s = clamp((r.h / box.n) * 0.7, hardMin, maxS);
+    }
+    const wide = widest(vctx, lines);
+    if (wide > d.w - 2 * px) d.w = wide + 2 * px;
+    d.h = Math.max(d.h, lines.length * s * LH + 2);
+    if (lines.length === 1 && box.clean && Math.abs(f.l - f.r) <= 0.2 * Math.max(f.l, f.r) + 2) align = 'center';
+  }
+  d.w = Math.min(W, d.w); d.h = Math.min(H, d.h);
+  d.x = clamp(d.x, 0, W - d.w); d.y = clamp(d.y, 0, H - d.h);
+  box.d = d; box.fs = s; box.lh = s * LH; box.lines = lines; box.px = px; box.align = align;
+  box.fill = cornerFill(box);
+}
+
+/* Background for the patch: one flat colour, or a small gradient tile when the four corners differ
+   (shadows, soft gradients), so the patch does not show up as a rectangle. */
+function cornerFill(box) {
+  const W = S.W, H = S.H, d = box.d, bg = box.bg;
+  const q = 4;
+  const at = (x, y) => {
+    x = clamp(Math.round(x), 0, Math.max(0, W - q)); y = clamp(Math.round(y), 0, Math.max(0, H - q));
+    const w = Math.min(q, W - x), h = Math.min(q, H - y);
+    const p = S.sctx.getImageData(x, y, w, h).data;
+    let r = 0, g = 0, b = 0, c = 0;
+    for (let i = 0; i < p.length; i += 4) {
+      if (Math.abs(p[i] - bg[0]) + Math.abs(p[i + 1] - bg[1]) + Math.abs(p[i + 2] - bg[2]) <= INK) { r += p[i]; g += p[i + 1]; b += p[i + 2]; c++; }
+    }
+    return c ? [r / c, g / c, b / c] : bg.slice();
+  };
+  const tl = at(d.x, d.y), tr = at(d.x + d.w - q, d.y), bl = at(d.x, d.y + d.h - q), br = at(d.x + d.w - q, d.y + d.h - q);
+  let spread = 0;
+  for (let k = 0; k < 3; k++) spread = Math.max(spread, Math.max(tl[k], tr[k], bl[k], br[k]) - Math.min(tl[k], tr[k], bl[k], br[k]));
+  const flat = [0, 1, 2].map(k => (tl[k] + tr[k] + bl[k] + br[k]) / 4);
+  if (!box.clean) return { flat: bg };
+  if (spread < 4) return { flat };
+  const G = 8, tile = document.createElement('canvas');
+  tile.width = G; tile.height = G;
+  const tc = tile.getContext('2d'), im = tc.createImageData(G, G);
+  for (let y = 0; y < G; y++) {
+    for (let x = 0; x < G; x++) {
+      const u = x / (G - 1), v = y / (G - 1), o = (y * G + x) * 4;
+      for (let k = 0; k < 3; k++) {
+        im.data[o + k] = Math.round((tl[k] * (1 - u) + tr[k] * u) * (1 - v) + (bl[k] * (1 - u) + br[k] * u) * v);
+      }
+      im.data[o + 3] = 255;
+    }
+  }
+  tc.putImageData(im, 0, 0);
+  return { flat, tile };
+}
+
+const rgb = c => 'rgb(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ')';
+function roundRect(c, x, y, w, h, rad) {
+  const q = Math.min(rad, w / 2, h / 2);
+  c.beginPath();
+  c.moveTo(x + q, y);
+  c.arcTo(x + w, y, x + w, y + h, q);
+  c.arcTo(x + w, y + h, x, y + h, q);
+  c.arcTo(x, y + h, x, y, q);
+  c.arcTo(x, y, x + w, y, q);
+  c.closePath();
+}
+
+function drawBox(c, b) {
+  const d = b.d, fill = b.fill || { flat: b.bg };
+  roundRect(c, d.x, d.y, d.w, d.h, Math.min(8, d.h * 0.18));
+  if (fill.tile) {
+    c.save(); c.clip();
+    c.imageSmoothingEnabled = true;
+    c.drawImage(fill.tile, d.x - 1, d.y - 1, d.w + 2, d.h + 2);
+    c.restore();
+  } else {
+    c.fillStyle = rgb(fill.flat);
+    c.fill();
+  }
+  c.fillStyle = rgb(b.fg);
+  c.font = '600 ' + b.fs + 'px ' + FONT;
+  c.textBaseline = 'middle';
+  c.textAlign = b.align;
+  const x = b.align === 'center' ? d.x + d.w / 2 : d.x + b.px;
+  let y = d.y + (d.h - b.lines.length * b.lh) / 2 + b.lh / 2;
+  for (const l of b.lines) { c.fillText(l, x, y); y += b.lh; }
+}
+
+function paint(withSelection) {
+  if (!S.src) return;
+  vctx.setTransform(1, 0, 0, 1, 0, 0);
+  vctx.drawImage(S.src, 0, 0);
+  if (!S.showOrig) for (const b of S.boxes) drawBox(vctx, b);
+  if (withSelection && S.sel) {
+    const d = S.showOrig ? S.sel.r : S.sel.d;
+    vctx.lineWidth = Math.max(3, S.W * 0.005);
+    vctx.strokeStyle = '#FFD93B';
+    roundRect(vctx, d.x - 2, d.y - 2, d.w + 4, d.h + 4, 8);
+    vctx.stroke();
+  }
+}
+let raf = 0;
+function render() {
+  if (raf) return;
+  raf = requestAnimationFrame(() => { raf = 0; paint(true); });
+}
+
+/* ================= sheets ================= */
+function openSheet(id) {
+  $('sheetBox').hidden = id !== 'sheetBox';
+  $('sheetPaste').hidden = id !== 'sheetPaste';
+  $('veil').hidden = false;
+}
+function closeSheet() {
+  if ($('veil').hidden) return;
+  $('veil').hidden = true;
+  if (S.sel) { S.sel = null; render(); }
+}
+$('veil').addEventListener('click', e => {
+  if (e.target === $('veil') || e.target.closest('[data-close]')) closeSheet();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+
+view.addEventListener('click', e => {
+  if (!S.boxes.length) return;
+  const rc = view.getBoundingClientRect();
+  const x = (e.clientX - rc.left) / rc.width * S.W, y = (e.clientY - rc.top) / rc.height * S.H;
+  let hit = null, best = Infinity;
+  for (const b of S.boxes) {
+    const d = S.showOrig ? b.r : b.d;
+    const slack = Math.max(0, (S.W * 0.03 - d.h) / 2);
+    if (x >= d.x - slack && x <= d.x + d.w + slack && y >= d.y - slack && y <= d.y + d.h + slack) {
+      const a = d.w * d.h;
+      if (a < best) { best = a; hit = b; }
+    }
+  }
+  if (!hit) return;
+  S.sel = hit;
+  $('sheetOrig').textContent = hit.o || '(không đọc được chữ gốc)';
+  $('sheetTran').textContent = hit.t;
+  openSheet('sheetBox');
+  render();
+});
+$('copyTran').addEventListener('click', () => { if (S.sel) copyText(S.sel.t, 'Đã chép bản dịch'); });
+$('copyOrig').addEventListener('click', () => { if (S.sel) copyText(S.sel.o, 'Đã chép chữ gốc'); });
+
+/* ================= dock + home ================= */
+$('btnPick').addEventListener('click', pick);
+$('btnPick2').addEventListener('click', pick);
+$('btnPaste').addEventListener('click', pasteImage);
+$('btnPaste2').addEventListener('click', pasteImage);
+
+$('btnOrig').addEventListener('click', () => {
+  S.showOrig = !S.showOrig;
+  $('btnOrig').setAttribute('aria-pressed', String(S.showOrig));
+  render();
+});
+
+$('btnCopy').addEventListener('click', () => {
+  const rows = S.boxes.slice().sort((a, b) => (a.r.y + a.r.h / 2) - (b.r.y + b.r.h / 2) || a.r.x - b.r.x);
+  copyText(rows.map(b => b.t).join('\n'), 'Đã chép ' + rows.length + ' dòng dịch');
+});
+
+$('btnSave').addEventListener('click', async () => {
+  const dl = await downloadsPromise;
+  if (!dl || !S.src) return;
+  const wasOrig = S.showOrig;
+  S.showOrig = false; paint(false);
+  const blob = await new Promise(r => view.toBlob(r, 'image/png'));
+  S.showOrig = wasOrig; paint(true);
+  if (!blob) { toast('Không tạo được ảnh.'); return; }
+  const t = new Date(), z = n => String(n).padStart(2, '0');
+  const name = 'dich-man-hinh-' + t.getFullYear() + z(t.getMonth() + 1) + z(t.getDate()) + '-' + z(t.getHours()) + z(t.getMinutes()) + z(t.getSeconds()) + '.png';
+  try { await dl.save({ filename: name, data: blob }); toast('Đã lưu ảnh'); }
+  catch (e) { if (!e || e.code !== 'declined') toast('Không lưu được ảnh.'); }
+});
+
+document.querySelectorAll('input[name="lang"]').forEach(el => {
+  el.checked = el.value === S.lang;
+  el.addEventListener('change', () => {
+    if (!el.checked) return;
+    S.lang = el.value; store.set('dmh.lang', S.lang);
+    if (S.src) translate();
+  });
+});
+document.querySelectorAll('input[name="tier"]').forEach(el => {
+  el.checked = el.value === S.tier;
+  el.addEventListener('change', () => {
+    if (!el.checked) return;
+    S.tier = el.value; store.set('dmh.tier', S.tier);
+  });
+});
+
+})();
+</script>
+</body>
+</html>
